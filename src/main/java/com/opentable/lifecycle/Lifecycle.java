@@ -29,6 +29,14 @@ public interface Lifecycle
     void addListener(LifecycleStage stage, LifecycleListener listener);
 
     /**
+     * Adds a {@link Runnable} to a lifecycle stage.
+     */
+    default void addListener(LifecycleStage stage, Runnable listener)
+    {
+        addListener(stage, (LifecycleStage myStage) -> { listener.run(); });
+    }
+
+    /**
      * Return the next stage in the lifecycle.
      */
     LifecycleStage getNextStage();
