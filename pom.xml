@@ -58,8 +58,8 @@
     </dependency>
 
     <dependency>
-      <groupId>com.nesscomputing.testing</groupId>
-      <artifactId>kawala-lessio</artifactId>
+      <groupId>org.kitei.testing</groupId>
+      <artifactId>kitei-lessio</artifactId>
       <optional>true</optional>
       <scope>provided</scope>
     </dependency>

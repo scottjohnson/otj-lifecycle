@@ -15,20 +15,19 @@
  */
 package com.opentable.lifecycle.junit;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.inject.Module;
+
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.kitei.testing.lessio.AllowAll;
 
 import com.opentable.lifecycle.DefaultLifecycle;
 import com.opentable.lifecycle.Lifecycle;
 import com.opentable.lifecycle.LifecycleStage;
 import com.opentable.lifecycle.ServiceDiscoveryLifecycle;
 import com.opentable.lifecycle.guice.AbstractLifecycleModule;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.inject.Module;
-
-import com.nesscomputing.testing.lessio.AllowAll;
 
 /**
  * Test rule to run lifecycle start and stop for unit tests. Unfortunately, this must be run around a method (after \#0064Before and before \#0064After annotations), so
