@@ -27,7 +27,7 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
 /**
- * Runs an unit test and looks for {@link \#0064LifecycleRule} annotations to hook up the lifecycle around a method.
+ * Runs an unit test and looks for {@link LifecycleRule} annotations to hook up the lifecycle around a method.
  */
 public class LifecycleRunner extends BlockJUnit4ClassRunner
 {
