@@ -18,11 +18,12 @@ package com.opentable.lifecycle;
 /**
  * Implemented by classes that want to get a callback from the lifecycle. An instance can be registered in multiple stages.
  */
+@FunctionalInterface
 public interface LifecycleListener
 {
-	/**
-	 * Called when a stage is hit.
-	 * @param lifecycleStage A LifecycleStage object representing the stage that was hit.
-	 */
+    /**
+     * Called when a stage is hit.
+     * @param lifecycleStage A LifecycleStage object representing the stage that was hit.
+     */
     void onStage(final LifecycleStage lifecycleStage);
 }
