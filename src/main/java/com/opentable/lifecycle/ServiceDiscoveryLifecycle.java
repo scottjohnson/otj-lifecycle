@@ -34,6 +34,7 @@ public class ServiceDiscoveryLifecycle extends AbstractLifecycle implements Life
      * Register a shutdown hook to fire to the Stop stage on JVM shutdown, and
      * join against the current thread.
      */
+    @Override
     public void join() throws InterruptedException
     {
         super.join(LifecycleStage.STOP_STAGE, true);
