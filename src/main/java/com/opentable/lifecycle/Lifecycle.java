@@ -15,6 +15,7 @@
  */
 package com.opentable.lifecycle;
 
+
 /**
  * Provides a lifecycle that can be run inside an IoC container such as guice.
  */
@@ -29,11 +30,11 @@ public interface Lifecycle
     void addListener(LifecycleStage stage, LifecycleListener listener);
 
     /**
-     * Adds a {@link Runnable} to a lifecycle stage.
+     * Adds a {@link ExceptionRunnable} to a lifecycle stage.
      */
-    default void addListener(LifecycleStage stage, Runnable listener)
+    default void addListener(LifecycleStage stage, ExceptionRunnable listener)
     {
-        addListener(stage, (LifecycleStage myStage) -> { listener.run(); });
+        addListener(stage, (myStage) -> { listener.runSafely(); });
     }
 
     /**
