@@ -21,7 +21,6 @@ import com.google.inject.Module;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.kitei.testing.lessio.AllowAll;
 
 import com.opentable.lifecycle.DefaultLifecycle;
 import com.opentable.lifecycle.Lifecycle;
@@ -33,7 +32,6 @@ import com.opentable.lifecycle.guice.AbstractLifecycleModule;
  * Test rule to run lifecycle start and stop for unit tests. Unfortunately, this must be run around a method (after \#0064Before and before \#0064After annotations), so
  * it can only be used in conjunction with the {@link LifecycleRunner}.
  */
-@AllowAll
 public final class LifecycleStatement implements TestRule
 {
     public static LifecycleStatement defaultLifecycle()
