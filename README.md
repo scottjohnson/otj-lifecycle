@@ -1,6 +1,8 @@
 OpenTable Lifecycle Component
 =============================
 
+[![Build Status](https://travis-ci.org/opentable/otj-lifecycle.svg)](https://travis-ci.org/opentable/otj-lifecycle)
+
 Component Charter
 -----------------
 
