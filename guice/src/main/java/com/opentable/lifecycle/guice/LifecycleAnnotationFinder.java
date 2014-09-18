@@ -28,10 +28,12 @@ import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.opentable.lifecycle.Lifecycle;
 import com.opentable.lifecycle.LifecycleListener;
 import com.opentable.lifecycle.LifecycleStage;
-import com.opentable.logging.Log;
 
 /**
  * Visit all Guice injections.  For each declared method in the class (and superclasses),
@@ -40,7 +42,7 @@ import com.opentable.logging.Log;
  */
 @NotThreadSafe
 class LifecycleAnnotationFinder implements TypeListener {
-    private static final Log LOG = Log.findLog();
+    private static final Logger LOG = LoggerFactory.getLogger(LifecycleAnnotationFinder.class);
 
     /** Store all invocations found <b>before</b> the Lifecycle is available.  Null after lifecycle is available */
     private List<LifecycleInvocation> foundInvocations = Lists.newArrayList();
@@ -50,7 +52,7 @@ class LifecycleAnnotationFinder implements TypeListener {
 
     @Override
     public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
-        LOG.trace("Found new injectable type %s", type);
+        LOG.trace("Found new injectable type {}", type);
 
         Class<? super I> klass = type.getRawType();
         // Loop over the class and superclasses
@@ -64,7 +66,7 @@ class LifecycleAnnotationFinder implements TypeListener {
                     continue;
                 }
 
-                LOG.trace("Will invoke %s on %s", m, onStage.value());
+                LOG.trace("Will invoke {} on {}", m, onStage.value());
 
                 encounter.register(new InjectionListener<I>() {
                     @Override

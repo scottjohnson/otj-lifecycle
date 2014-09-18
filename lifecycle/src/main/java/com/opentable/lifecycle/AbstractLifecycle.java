@@ -22,14 +22,15 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Lists;
 
-import com.opentable.logging.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base code for lifecycling.
  */
 public abstract class AbstractLifecycle implements Lifecycle
 {
-    private static final Log LOG = Log.findLog();
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractLifecycle.class);
 
     private final ConcurrentMap<LifecycleStage, List<LifecycleListener>> listeners = new ConcurrentHashMap<LifecycleStage, List<LifecycleListener>>();
 
@@ -127,7 +128,7 @@ public abstract class AbstractLifecycle implements Lifecycle
             throw illegalStage(lifecycleStage);
         }
 
-        log("Stage '%s' starting...", lifecycleStage.getName());
+        log("Stage '{}' starting...", lifecycleStage.getName());
 
         // Reverse the order for the STOP stage, so that dependencies are torn down in reverse order.
         if (lifecycleStage.equals(LifecycleStage.STOP_STAGE)) {
@@ -138,7 +139,7 @@ public abstract class AbstractLifecycle implements Lifecycle
             listener.onStage(lifecycleStage);
         }
 
-        log("Stage '%s' complete.", lifecycleStage.getName());
+        log("Stage '{}' complete.", lifecycleStage.getName());
     }
 
     /**
