@@ -41,7 +41,7 @@ class MyLifecycledClass {
 Guice Integration
 -----------------
 
-Objects which are created by Guice ([and specifically only those](https://code.google.com/p/google-guice/wiki/AOP#Limitations),
+Objects which are created by Guice ([and specifically only those](https://github.com/google/guice/wiki/AOP#limitations),
 for example any registered by binding `toInstance` *will not work*) may declare methods to be `@OnStage(LifecycleStage.SOME_STAGE)`.
 These methods will be registered and executed exactly as if they were bound with a call to `addListener` immediately after Guice construction
 time.
