@@ -19,14 +19,14 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.opentable.lifecycle.Lifecycle;
 import com.opentable.lifecycle.LifecycleListener;
 import com.opentable.lifecycle.LifecycleStage;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * Base class for providers that want to hook the objects they provide into the Lifecyle. Any class extending this base class
@@ -46,7 +46,7 @@ public abstract class AbstractLifecycleProvider<T> implements LifecycleProvider<
     @Override
     public void addAction(final LifecycleStage stage, final LifecycleAction<T> action)
     {
-    	stageEvents.add(new StageEvent(stage, action));
+        stageEvents.add(new StageEvent(stage, action));
     }
 
     /**
@@ -90,25 +90,25 @@ public abstract class AbstractLifecycleProvider<T> implements LifecycleProvider<
         }
 
         private LifecycleStage getLifecycleStage()
-		{
-			return stage;
-		}
+        {
+            return stage;
+        }
 
         private LifecycleAction<T> getLifecycleAction()
-		{
-			return action;
-		}
+        {
+            return action;
+        }
 
-		private transient String toString;
+        private transient String toString;
 
-		@Override
-		public String toString() {
-			if (toString == null) {
-				toString = new ToStringBuilder(this).append("stage", stage)
-						.append("action", action).toString();
-			}
-			return toString;
-		}
+        @Override
+        public String toString() {
+            if (toString == null) {
+                toString = new ToStringBuilder(this).append("stage", stage)
+                        .append("action", action).toString();
+            }
+            return toString;
+        }
     }
 
     /**
