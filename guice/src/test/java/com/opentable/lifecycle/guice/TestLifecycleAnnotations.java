@@ -22,8 +22,6 @@ import org.junit.Test;
 
 import com.opentable.lifecycle.Lifecycle;
 import com.opentable.lifecycle.LifecycleStage;
-import com.opentable.lifecycle.guice.LifecycleModule;
-import com.opentable.lifecycle.guice.OnStage;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.AbstractModule;
