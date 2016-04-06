@@ -152,6 +152,45 @@ public class TestLifecycleAnnotations {
         assertTrue(tester.isStopped);
     }
 
+    @Test
+    public void testLifecycleAnnotationsOnProvider() {
+        final AtomicBoolean isConfigured = new AtomicBoolean();
+        Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                binder().requireExplicitBindings();
+                binder().disableCircularProxies();
+
+                install (new LifecycleModule());
+                bind (LifecycleTest.class).toProvider(() -> new LifecycleTest() {
+                    @SuppressWarnings("unused")
+                    @OnStage(LifecycleStage.CONFIGURE)
+                    void configure() {
+                        Preconditions.checkState(isStarted == false && isStopped == false);
+                        isConfigured.set(true);
+                    }
+                });
+
+                requestInjection(TestLifecycleAnnotations.this);
+            }
+        });
+
+        assertFalse(isConfigured.get());
+        assertFalse(tester.isStarted);
+        assertFalse(tester.isStopped);
+
+        lifecycle.executeTo(LifecycleStage.START_STAGE);
+
+        assertTrue(isConfigured.get());
+        assertTrue(tester.isStarted);
+        assertFalse(tester.isStopped);
+
+        lifecycle.executeTo(LifecycleStage.STOP_STAGE);
+
+        assertTrue(tester.isStarted);
+        assertTrue(tester.isStopped);
+    }
+
     @Test(expected=ProvisionException.class)
     public void testLifecycleAnnotationsAfterStartFails() {
         Injector injector = Guice.createInjector(new AbstractModule() {
