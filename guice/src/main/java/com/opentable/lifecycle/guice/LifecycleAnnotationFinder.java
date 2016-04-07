@@ -23,10 +23,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
-import com.google.inject.TypeLiteral;
-import com.google.inject.spi.InjectionListener;
-import com.google.inject.spi.TypeEncounter;
-import com.google.inject.spi.TypeListener;
+import com.google.inject.spi.ProvisionListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +38,7 @@ import com.opentable.lifecycle.LifecycleStage;
  * {@link Lifecycle} so that they are run.
  */
 @NotThreadSafe
-class LifecycleAnnotationFinder implements TypeListener {
+class LifecycleAnnotationFinder implements ProvisionListener {
     private static final Logger LOG = LoggerFactory.getLogger(LifecycleAnnotationFinder.class);
 
     /** Store all invocations found <b>before</b> the Lifecycle is available.  Null after lifecycle is available */
@@ -51,10 +48,11 @@ class LifecycleAnnotationFinder implements TypeListener {
     private Lifecycle lifecycle;
 
     @Override
-    public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
-        LOG.trace("Found new injectable type {}", type);
+    public <T> void onProvision(ProvisionInvocation<T> provision) {
+        LOG.trace("Found new binding {}", provision.getBinding());
+        final T result = provision.provision();
 
-        Class<? super I> klass = type.getRawType();
+        Class<?> klass = result.getClass();
         // Loop over the class and superclasses
         do {
             for (final Method m : klass.getDeclaredMethods()) {
@@ -68,19 +66,14 @@ class LifecycleAnnotationFinder implements TypeListener {
 
                 LOG.trace("Will invoke {} on {}", m, onStage.value());
 
-                encounter.register(new InjectionListener<I>() {
-                    @Override
-                    public void afterInjection(I injectee) {
-                        LifecycleInvocation invocation = new LifecycleInvocation(new LifecycleStage(onStage.value()), injectee, m);
+                LifecycleInvocation invocation = new LifecycleInvocation(new LifecycleStage(onStage.value()), result, m);
 
-                        if (lifecycle != null) { // If the lifecycle is available, register now
-                            addListener(invocation);
-                        } else { // Otherwise, do it later, when the lifecycle is injected
-                            Preconditions.checkState(foundInvocations != null, "Injection after lifecycle start!");
-                            foundInvocations.add(invocation);
-                        }
-                    }
-                });
+                if (lifecycle != null) { // If the lifecycle is available, register now
+                    addListener(invocation);
+                } else { // Otherwise, do it later, when the lifecycle is injected
+                    Preconditions.checkState(foundInvocations != null, "Injection after lifecycle start!");
+                    foundInvocations.add(invocation);
+                }
 
             }
             klass = klass.getSuperclass();
