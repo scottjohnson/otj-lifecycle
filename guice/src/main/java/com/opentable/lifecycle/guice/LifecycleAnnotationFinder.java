@@ -52,6 +52,10 @@ class LifecycleAnnotationFinder implements ProvisionListener {
         LOG.trace("Found new binding {}", provision.getBinding());
         final T result = provision.provision();
 
+        if (result == null) {
+            return;
+        }
+
         Class<?> klass = result.getClass();
         // Loop over the class and superclasses
         do {

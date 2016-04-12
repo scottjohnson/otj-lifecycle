@@ -18,6 +18,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.annotation.Nullable;
+
 import org.junit.Test;
 
 import com.opentable.lifecycle.Lifecycle;
@@ -29,6 +31,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.ProvisionException;
+import com.google.inject.util.Providers;
 
 public class TestLifecycleAnnotations {
 
@@ -51,6 +54,7 @@ public class TestLifecycleAnnotations {
     Lifecycle lifecycle;
 
     @Inject
+    @Nullable
     LifecycleTest tester;
 
     @Test
@@ -206,5 +210,24 @@ public class TestLifecycleAnnotations {
         lifecycle.executeTo(LifecycleStage.START_STAGE);
 
         injector.getInstance(LifecycleTest.class); // Boom!
+    }
+
+    @Test
+    public void testNullProvider() {
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                binder().requireExplicitBindings();
+                binder().disableCircularProxies();
+
+                install (new LifecycleModule());
+                bind (LifecycleTest.class).toProvider(Providers.of(null));
+
+                requestInjection(TestLifecycleAnnotations.this);
+            }
+        });
+        lifecycle.executeTo(LifecycleStage.START_STAGE);
+
+        injector.getInstance(LifecycleTest.class);
     }
 }
